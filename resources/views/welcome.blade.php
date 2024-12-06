@@ -56,8 +56,8 @@
             <div class="mb-12">
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
                     <div class="md:flex">
-                        <div class="md:flex-shrink-0 center">
-                            <img class="h-48 w-full object-cover md:w-48" src="{{ asset('img/3 Siswa 1.png') }}" alt="Library">
+                        <div class="md:flex-shrink-0 flex justify-center items-center">
+                            <img class="h-48 w-full object-contain md:w-48" src="{{ asset('img/3 Siswa 1.png') }}" alt="Library">
                         </div>
                         <div class="p-8">
                             <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Welcome to</div>

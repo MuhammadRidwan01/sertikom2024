@@ -25,7 +25,7 @@ new class extends Component {
 };
 ?>
 
-<nav class="fixed left-0 top-0 bottom-0 w-64 bg-white dark:bg-gray-800 shadow-lg overflow-y-auto py-6 px-4 space-y-2">
+<nav class="fixed left-0 h-[88dvh] top-0 bottom-0 w-64 bg-white dark:bg-gray-800 shadow-lg overflow-y-auto py-6 px-4 space-y-2">
     <div class="text-2xl font-bold text-gray-800 dark:text-white ">
         Library Xpro
     </div>
@@ -105,7 +105,7 @@ new class extends Component {
 
             <x-nav-link :href="route('member.book-management')"
                 :active="request()->routeIs('member.book-management')"
-                class="flex w-full items-center py-2 px-4 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition duration-200 {{ request()->routeIs('member.dashboard') ? 'bg-gray-100 dark:bg-gray-700 font-semibold' : '' }}"
+                class="flex w-full items-center py-2 px-4 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition duration-200 {{ request()->routeIs('member.book-management') ? 'bg-gray-100 dark:bg-gray-700 font-semibold' : '' }}"
                 wire:navigate>
                 <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />

@@ -129,7 +129,7 @@
                         </h1>
                     </div>
 
-                    <div class="flex items-center space-x-2">
+                    <div class="flex items-center space-x-4">
                         <button @click="toggleDarkMode" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
                             <svg x-show="!darkMode" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m3.343-3.657l-1.414-1.414m12.728 12.728l1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z"></path>
@@ -144,7 +144,7 @@
                         <div x-data="{ userDropdown: false }" class="relative">
                             <button @click="userDropdown = !userDropdown" class="flex items-center space-x-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white">
                                 <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name }}" alt="User" class="w-8 h-8 rounded-full">
-                                <span class="hidden md:block">{{ auth()->user()->name }}</span>
+                                <span class="hidden md:inline-block">{{ auth()->user()->name }}</span>
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                                 </svg>

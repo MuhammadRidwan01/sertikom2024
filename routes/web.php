@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\welcomeController;
 use App\Http\Controllers\dashboardController;
 
-Route::view('/', 'welcome');
+Route::get('/', [welcomeController::class, 'index'])->name('welcome');
 
 
 

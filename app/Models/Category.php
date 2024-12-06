@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Book;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
@@ -20,7 +21,12 @@ class Category extends Model
         ]);
 
         // Optional: Update buku yang sebelumnya berasosiasi
-        Book::whereNull('category_id')
-            ->update(['category_id' => $this->id]);
+        Book::whereNull('kategori')
+            ->update(['kategori' => $this->id]);
     }
+
+    public function books()
+{
+    return $this->hasMany(Book::class, 'kategori');
+}
 }

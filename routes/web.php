@@ -49,5 +49,8 @@ Route::post('/logout', function () {
 })->name('logout');
 
 });
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok']);
+});
 
 require __DIR__.'/auth.php';

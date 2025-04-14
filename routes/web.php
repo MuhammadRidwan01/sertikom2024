@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\welcomeController;
-use App\Http\Controllers\dashboardController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', [welcomeController::class, 'index'])->name('welcome');
 

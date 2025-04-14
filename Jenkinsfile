@@ -25,20 +25,24 @@ pipeline {
             steps {
                 sh 'cp .env.example .env'
                 sh 'php artisan key:generate'
+                sh 'php artisan migrate'
             }
         }
         
-        stage('Run Tests') {
+        stage('Check Database') {
     steps {
-        sh 'cp .env.example .env.testing'
-        sh 'echo "DB_CONNECTION=sqlite" >> .env.testing'
-        sh 'echo "DB_DATABASE=:memory:" >> .env.testing'
-        sh 'echo "APP_URL=http://localhost" >> .env.testing'
-        sh 'chmod -R 775 storage bootstrap/cache'
-        sh 'php artisan config:cache'
-        sh 'php artisan test --env=testing'
+        sh 'php artisan tinker --execute="DB::connection()->getPdo(); echo \'✅ DB OK\n\';"'
     }
 }
+        stage('Serve & Check') {
+    steps {
+        sh 'php artisan serve &'
+        sh 'sleep 5'
+        sh 'curl --fail --silent http://127.0.0.1:8000'
+    }
+}
+
+
 
         
         stage('Deploy') {

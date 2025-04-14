@@ -46,25 +46,42 @@ pipeline {
 
         
         stage('Deploy') {
-            steps {
-                sshagent(['jenkins-ssh']) {
-                    sh '''
-    ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "mkdir -p /var/www/laravel-tmp"
-    rsync -avz --exclude ".git" --exclude "node_modules" --exclude "tests" ./ www-data@192.168.1.101:/var/www/laravel-tmp/
-    ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd /var/www/laravel-tmp && composer install --no-dev --optimize-autoloader"
-    ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd /var/www/laravel-tmp && php artisan migrate --force"
-    ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd /var/www/laravel-tmp && php artisan config:cache"
-    ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd /var/www/laravel-tmp && php artisan route:cache"
-    ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd /var/www/laravel-tmp && php artisan view:cache"
-    ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "mv /var/www/laravel /var/www/laravel-old || true"
-    ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "mv /var/www/laravel-tmp /var/www/laravel"
-    ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "rm -rf /var/www/laravel-old || true"
-    ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "chmod -R 775 /var/www/laravel/storage"
-'''
+    steps {
+        sshagent(['jenkins-ssh']) {
+            sh '''
+# Set project path di satu tempat
+DEPLOY_PATH="/var/www/laravel-tmp"
 
-                }
-            }
+# Buat folder project
+ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "mkdir -p $DEPLOY_PATH"
+
+# Upload project
+rsync -avz --exclude ".git" --exclude "node_modules" --exclude "tests" ./ www-data@192.168.1.101:$DEPLOY_PATH/
+
+# Install dependensi Laravel
+ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd $DEPLOY_PATH && composer install --no-dev --optimize-autoloader"
+
+# Siapkan SQLite jika pakai sqlite
+ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "[[ -f $DEPLOY_PATH/database/database.sqlite ]] || mkdir -p $DEPLOY_PATH/database && touch $DEPLOY_PATH/database/database.sqlite"
+
+# Laravel optimisasi & migrate
+ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd $DEPLOY_PATH && php artisan optimize:clear"
+ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd $DEPLOY_PATH && php artisan optimize"
+ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd $DEPLOY_PATH && php artisan migrate --force"
+ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd $DEPLOY_PATH && php artisan config:cache"
+ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd $DEPLOY_PATH && php artisan route:cache"
+ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd $DEPLOY_PATH && php artisan view:cache"
+
+# Deploy ke live path
+ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "mv /var/www/laravel /var/www/laravel-old || true"
+ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "mv $DEPLOY_PATH /var/www/laravel"
+ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "rm -rf /var/www/laravel-old || true"
+ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "chmod -R 775 /var/www/laravel/storage"
+'''
         }
+    }
+}
+
     }
     
     post {

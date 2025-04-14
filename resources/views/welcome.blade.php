@@ -18,7 +18,7 @@
     class="bg-gray-100 dark:bg-gray-900 transition-colors duration-300 ">
     <div class="bg-gray-100 dark:bg-gray-900 min-h-screen">
         <div class="container mx-auto px-4 py-8">
-            <!-- Header with Dark Mode Toggle -->
+            <!-- Header -->
             <header class="flex justify-between items-center mb-12">
                 <div class="flex items-center space-x-4">
                     <h1 class="text-3xl font-bold text-gray-800 dark:text-white">XPro Library</h1>
@@ -56,7 +56,7 @@
                 </div>
             </header>
 
-            <!-- Main Content with Alpine.js Tabs -->
+            <!-- Main card menggunakan alpine.js -->
             <main>
                 <div class="mb-12">
                     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
@@ -71,7 +71,7 @@
                                 <h2 class="block mt-1 text-3xl leading-tight font-bold text-gray-900 dark:text-white">
                                     XPro Library</h2>
                                 <p class="mt-2 text-gray-600 dark:text-gray-300">
-                                    XPro Library is a digital library management system developed for the Laravel
+                                    ini adalah contoh continius intergration dan continius development XPro Library is a digital library management system developed for the Laravel
                                     Competency Certification (Sertikom).
                                     Built with modern technology using Laravel, Livewire, and Alpine.js, this website
                                     offers a responsive and

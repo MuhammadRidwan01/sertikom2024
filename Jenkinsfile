@@ -29,10 +29,17 @@ pipeline {
         }
         
         stage('Run Tests') {
-            steps {
-                sh 'php artisan test'
-            }
-        }
+    steps {
+        sh 'cp .env.example .env.testing'
+        sh 'echo "DB_CONNECTION=sqlite" >> .env.testing'
+        sh 'echo "DB_DATABASE=:memory:" >> .env.testing'
+        sh 'echo "APP_URL=http://localhost" >> .env.testing'
+        sh 'chmod -R 775 storage bootstrap/cache'
+        sh 'php artisan config:cache'
+        sh 'php artisan test --env=testing'
+    }
+}
+
         
         stage('Deploy') {
             steps {

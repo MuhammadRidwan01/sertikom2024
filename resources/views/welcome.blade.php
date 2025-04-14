@@ -71,7 +71,7 @@
                                 <h2 class="block mt-1 text-3xl leading-tight font-bold text-gray-900 dark:text-white">
                                     XPro Library</h2>
                                 <p class="mt-2 text-gray-600 dark:text-gray-300">
-                                    ini adalah contoh continius intergration dan continius development XPro Library is a digital library management system developed for the Laravel
+                                    XPro Library is a digital library management system developed for the Laravel
                                     Competency Certification (Sertikom).
                                     Built with modern technology using Laravel, Livewire, and Alpine.js, this website
                                     offers a responsive and
@@ -124,8 +124,9 @@
                                 </g>
                             </svg>
 
-                            <h3 class="text-xl font-bold mb-2 dark:text-white">Laravel</h3>
-                            <p class="text-gray-600 dark:text-gray-300">
+                            <h3 class="text-xl font-bold mb-2 dark:text-white">jenkins</h3>
+                            <p class="text-red-600 dark:text-gray-300">
+                                ini adalah contoh continius intergration dan continius development
                                 Laravel is a powerful and elegant PHP framework designed to simplify web application
                                 development. Laravel is ideal for building modern, secure, and scalable web
                                 applications.

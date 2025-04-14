@@ -5,127 +5,84 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-                githubNotify context: 'continuous-integration/jenkins/checkout', 
-                           description: 'Checkout successful', 
-                           status: 'SUCCESS'
+                // Menggunakan updateGitHubCommitStatus sebagai alternatif
+                updateGitHubCommitStatus name: 'checkout', state: 'SUCCESS'
             }
         }
         
         stage('Install Dependencies') {
             steps {
-                githubNotify context: 'continuous-integration/jenkins/dependencies', 
-                           description: 'Installing dependencies', 
-                           status: 'PENDING'
+                updateGitHubCommitStatus name: 'dependencies', state: 'PENDING'
                 sh 'composer install --no-interaction --no-progress --no-suggest'
+                updateGitHubCommitStatus name: 'dependencies', state: 'SUCCESS'
             }
             post {
-                success {
-                    githubNotify context: 'continuous-integration/jenkins/dependencies', 
-                              description: 'Dependencies installed', 
-                              status: 'SUCCESS'
-                }
                 failure {
-                    githubNotify context: 'continuous-integration/jenkins/dependencies', 
-                              description: 'Failed to install dependencies', 
-                              status: 'FAILURE'
+                    updateGitHubCommitStatus name: 'dependencies', state: 'FAILURE'
                 }
             }
         }
         
         stage('Build Frontend Assets') {
             steps {
-                githubNotify context: 'continuous-integration/jenkins/frontend-build', 
-                           description: 'Building frontend assets', 
-                           status: 'PENDING'
+                updateGitHubCommitStatus name: 'frontend-build', state: 'PENDING'
                 sh 'npm install'
                 sh 'npm run build'
+                updateGitHubCommitStatus name: 'frontend-build', state: 'SUCCESS'
             }
             post {
-                success {
-                    githubNotify context: 'continuous-integration/jenkins/frontend-build', 
-                              description: 'Frontend assets built', 
-                              status: 'SUCCESS'
-                }
                 failure {
-                    githubNotify context: 'continuous-integration/jenkins/frontend-build', 
-                              description: 'Frontend build failed', 
-                              status: 'FAILURE'
+                    updateGitHubCommitStatus name: 'frontend-build', state: 'FAILURE'
                 }
             }
         }
         
         stage('Setup Environment') {
             steps {
-                githubNotify context: 'continuous-integration/jenkins/environment-setup', 
-                           description: 'Setting up environment', 
-                           status: 'PENDING'
+                updateGitHubCommitStatus name: 'environment-setup', state: 'PENDING'
                 sh 'cp .env.example .env'
                 sh 'php artisan key:generate'
                 sh 'php artisan migrate'
+                updateGitHubCommitStatus name: 'environment-setup', state: 'SUCCESS'
             }
             post {
-                success {
-                    githubNotify context: 'continuous-integration/jenkins/environment-setup', 
-                              description: 'Environment setup complete', 
-                              status: 'SUCCESS'
-                }
                 failure {
-                    githubNotify context: 'continuous-integration/jenkins/environment-setup', 
-                              description: 'Environment setup failed', 
-                              status: 'FAILURE'
+                    updateGitHubCommitStatus name: 'environment-setup', state: 'FAILURE'
                 }
             }
         }
         
         stage('Check Database') {
             steps {
-                githubNotify context: 'continuous-integration/jenkins/database-check', 
-                           description: 'Checking database connection', 
-                           status: 'PENDING'
+                updateGitHubCommitStatus name: 'database-check', state: 'PENDING'
                 sh 'php artisan tinker --execute="DB::connection()->getPdo(); echo \'✅ DB OK\n\';"'
+                updateGitHubCommitStatus name: 'database-check', state: 'SUCCESS'
             }
             post {
-                success {
-                    githubNotify context: 'continuous-integration/jenkins/database-check', 
-                              description: 'Database connection OK', 
-                              status: 'SUCCESS'
-                }
                 failure {
-                    githubNotify context: 'continuous-integration/jenkins/database-check', 
-                              description: 'Database connection failed', 
-                              status: 'FAILURE'
+                    updateGitHubCommitStatus name: 'database-check', state: 'FAILURE'
                 }
             }
         }
         
         stage('Serve & Check') {
             steps {
-                githubNotify context: 'continuous-integration/jenkins/serve-check', 
-                           description: 'Testing application server', 
-                           status: 'PENDING'
+                updateGitHubCommitStatus name: 'serve-check', state: 'PENDING'
                 sh 'php artisan serve &'
                 sh 'sleep 5'
                 sh 'curl --fail --silent http://127.0.0.1:8000'
+                updateGitHubCommitStatus name: 'serve-check', state: 'SUCCESS'
             }
             post {
-                success {
-                    githubNotify context: 'continuous-integration/jenkins/serve-check', 
-                              description: 'Application server test passed', 
-                              status: 'SUCCESS'
-                }
                 failure {
-                    githubNotify context: 'continuous-integration/jenkins/serve-check', 
-                              description: 'Application server test failed', 
-                              status: 'FAILURE'
+                    updateGitHubCommitStatus name: 'serve-check', state: 'FAILURE'
                 }
             }
         }
         
         stage('Deploy') {
             steps {
-                githubNotify context: 'continuous-integration/jenkins/deployment', 
-                           description: 'Deployment in progress', 
-                           status: 'PENDING'
+                updateGitHubCommitStatus name: 'deployment', state: 'PENDING'
                 sshagent(['jenkins-ssh']) {
                     sh '''
 # Set project path di satu tempat
@@ -152,17 +109,11 @@ ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd /var/www/laravel && p
 ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd /var/www/laravel && php artisan view:cache"
 '''
                 }
+                updateGitHubCommitStatus name: 'deployment', state: 'SUCCESS'
             }
             post {
-                success {
-                    githubNotify context: 'continuous-integration/jenkins/deployment', 
-                              description: 'Deployment successful', 
-                              status: 'SUCCESS'
-                }
                 failure {
-                    githubNotify context: 'continuous-integration/jenkins/deployment', 
-                              description: 'Deployment failed', 
-                              status: 'FAILURE'
+                    updateGitHubCommitStatus name: 'deployment', state: 'FAILURE'
                 }
             }
         }
@@ -171,15 +122,11 @@ ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd /var/www/laravel && p
     post {
         success {
             echo 'Deployment successful!'
-            githubNotify context: 'continuous-integration/jenkins/build', 
-                       description: 'Build and deployment completed successfully', 
-                       status: 'SUCCESS'
+            updateGitHubCommitStatus name: 'build', state: 'SUCCESS'
         }
         failure {
             echo 'Deployment failed!'
-            githubNotify context: 'continuous-integration/jenkins/build', 
-                       description: 'Build or deployment failed', 
-                       status: 'FAILURE'
+            updateGitHubCommitStatus name: 'build', state: 'FAILURE'
         }
     }
 }

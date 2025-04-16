@@ -143,127 +143,74 @@ ssh -o StrictHostKeyChecking=no www-data@192.168.1.101 "cd /var/www/laravel && p
     post {
         success {
             echo 'Deployment successful!'
-            // Perbarui semua status menjadi success saat build berhasil
             script {
-                // Status utama build dan deploy
+                def SHA = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
+                // Create GitHub deployment
+                def DEPLOYMENT_ID = sh(
+                    script: """
+                    curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/deployments \
+                    -d '{
+                        "ref": "${SHA}",
+                        "environment": "${BUILD_ENV}",
+                        "description": "Deploying build ${BUILD_VERSION}",
+                        "auto_merge": false,
+                        "required_contexts": []
+                    }' | jq -r '.id'
+                """,
+                    returnStdout: true
+                ).trim()
+                // Update deployment status to success
                 sh """
-                curl -XPOST -H "Authorization: token ${GITHUB_TOKEN}" \
-                https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/\$(git rev-parse HEAD) \
+                curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
+                -H "Accept: application/vnd.github.v3+json" \
+                https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/deployments/${DEPLOYMENT_ID}/statuses \
                 -d '{
                     "state": "success",
-                    "target_url": "'${BUILD_URL}'",
-                    "description": "✅ CI/CD berhasil! Build ${BUILD_VERSION} berhasil di-deploy ke server ${BUILD_ENV} pada ${BUILD_TIME}",
-                    "context": "Jenkins/build-and-deploy"
+                    "log_url": "${BUILD_URL}",
+                    "description": "✅ Build ${BUILD_VERSION} berhasil dideploy ke ${BUILD_ENV}",
+                    "environment": "${BUILD_ENV}",
+                    "environment_url": "https://your-deployment-url.com",
+                    "auto_inactive": true
                 }'
             """
-                // Perbarui status lainnya menjadi success juga
+                // Kirim context status ke commit
                 sh """
-                curl -XPOST -H "Authorization: token ${GITHUB_TOKEN}" \
-                https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/\$(git rev-parse HEAD) \
+                curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
+                https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${SHA} \
                 -d '{
                     "state": "success",
-                    "target_url": "'${BUILD_URL}'",
-                    "description": "✅ Instalasi dependensi PHP berhasil",
-                    "context": "Jenkins/dependencies"
-                }'
-            """
-                sh """
-                curl -XPOST -H "Authorization: token ${GITHUB_TOKEN}" \
-                https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/\$(git rev-parse HEAD) \
-                -d '{
-                    "state": "success",
-                    "target_url": "'${BUILD_URL}'",
-                    "description": "✅ Build frontend berhasil",
-                    "context": "Jenkins/frontend"
-                }'
-            """
-                sh """
-                curl -XPOST -H "Authorization: token ${GITHUB_TOKEN}" \
-                https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/\$(git rev-parse HEAD) \
-                -d '{
-                    "state": "success",
-                    "target_url": "'${BUILD_URL}'",
-                    "description": "✅ Koneksi database berhasil terverifikasi",
-                    "context": "Jenkins/database"
-                }'
-            """
-                sh """
-                curl -XPOST -H "Authorization: token ${GITHUB_TOKEN}" \
-                https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/\$(git rev-parse HEAD) \
-                -d '{
-                    "state": "success",
-                    "target_url": "'${BUILD_URL}'",
-                    "description": "✅ Deployment ke server ${BUILD_ENV} berhasil",
-                    "context": "Jenkins/deployment"
+                    "target_url": "${BUILD_URL}",
+                    "description": "✅ Deployment sukses di ${BUILD_ENV}",
+                    "context": "deployment/${BUILD_ENV}"
                 }'
             """
             }
         }
         failure {
             echo 'Deployment failed!'
-            // Mengirim status "failure" untuk semua konteks
             script {
-                def failureStage = currentBuild.result ? "unknown": env.STAGE_NAME
-                // Status utama build dan deploy
+                def SHA = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
+                def failureStage = currentBuild.result ?: env.STAGE_NAME
+                // Update status gagal
                 sh """
-                curl -XPOST -H "Authorization: token ${GITHUB_TOKEN}" \
-                https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/\$(git rev-parse HEAD) \
+                curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
+                https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${SHA} \
                 -d '{
                     "state": "failure",
-                    "target_url": "'${BUILD_URL}'",
-                    "description": "❌ Build gagal pada tahap: ${failureStage}. Lihat log Jenkins untuk detail error.",
-                    "context": "Jenkins/build-and-deploy"
-                }'
-            """
-                // Perbarui semua status konteks lainnya menjadi failure juga
-                sh """
-                curl -XPOST -H "Authorization: token ${GITHUB_TOKEN}" \
-                https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/\$(git rev-parse HEAD) \
-                -d '{
-                    "state": "failure",
-                    "target_url": "'${BUILD_URL}'",
-                    "description": "❌ Build gagal pada tahap: ${failureStage}.",
-                    "context": "Jenkins/dependencies"
-                }'
-            """
-                sh """
-                curl -XPOST -H "Authorization: token ${GITHUB_TOKEN}" \
-                https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/\$(git rev-parse HEAD) \
-                -d '{
-                    "state": "failure",
-                    "target_url": "'${BUILD_URL}'",
-                    "description": "❌ Build gagal pada tahap: ${failureStage}.",
-                    "context": "Jenkins/frontend"
-                }'
-            """
-                sh """
-                curl -XPOST -H "Authorization: token ${GITHUB_TOKEN}" \
-                https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/\$(git rev-parse HEAD) \
-                -d '{
-                    "state": "failure",
-                    "target_url": "'${BUILD_URL}'",
-                    "description": "❌ Build gagal pada tahap: ${failureStage}.",
-                    "context": "Jenkins/database"
-                }'
-            """
-                sh """
-                curl -XPOST -H "Authorization: token ${GITHUB_TOKEN}" \
-                https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/\$(git rev-parse HEAD) \
-                -d '{
-                    "state": "failure",
-                    "target_url": "'${BUILD_URL}'",
-                    "description": "❌ Build gagal pada tahap: ${failureStage}.",
-                    "context": "Jenkins/deployment"
+                    "target_url": "${BUILD_URL}",
+                    "description": "❌ Gagal pada tahap: ${failureStage}",
+                    "context": "deployment/${BUILD_ENV}"
                 }'
             """
             }
         }
         always {
-            // Tambahkan cleanup atau notifikasi lain yang selalu dijalankan
             emailext (
                 subject: "Build ${currentBuild.currentResult}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                body: """<p>Build ${currentBuild.currentResult}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-                <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>""",
+                body: """<p>Build ${currentBuild.currentResult}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'</p>
+<p>Check console output at <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>""",
                 recipientProviders: [[$class: 'DevelopersRecipientProvider']]
             )
         }

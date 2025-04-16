@@ -15,12 +15,12 @@ pipeline {
                 script {
                     def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
                     sh """
-                        curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                        https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
+                        curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
                         -d '{
                             "state": "pending",
                             "target_url": "${BUILD_URL}",
-                            "description": "Jenkins CI/CD dimulai pada ${BUILD_TIME} untuk versi ${BUILD_VERSION} [${BUILD_ENV}]",
+                            "description": "Jenkins CI/CD dimulai pada ${BUILD_TIME} untuk versi <span class="math-inline">\{BUILD\_VERSION\} \[</span>{BUILD_ENV}]",
                             "context": "Jenkins/build-and-deploy"
                         }'
                     """
@@ -28,33 +28,37 @@ pipeline {
             }
             post {
                 success {
-                    script {
-                        def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                        sh """
-                            curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                            https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
-                            -d '{
-                                "state": "success",
-                                "target_url": "${BUILD_URL}",
-                                "description": "Checkout berhasil",
-                                "context": "Jenkins/build-and-deploy"
-                            }'
-                        """
+                    steps {
+                        script {
+                            def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                            sh """
+                                curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
+                                -d '{
+                                    "state": "success",
+                                    "target_url": "${BUILD_URL}",
+                                    "description": "Checkout berhasil",
+                                    "context": "Jenkins/build-and-deploy"
+                                }'
+                            """
+                        }
                     }
                 }
                 failure {
-                    script {
-                        def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                        sh """
-                            curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                            https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
-                            -d '{
-                                "state": "failure",
-                                "target_url": "${BUILD_URL}",
-                                "description": "Checkout gagal",
-                                "context": "Jenkins/build-and-deploy"
-                            }'
-                        """
+                    steps {
+                        script {
+                            def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                            sh """
+                                curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
+                                -d '{
+                                    "state": "failure",
+                                    "target_url": "${BUILD_URL}",
+                                    "description": "Checkout gagal",
+                                    "context": "Jenkins/build-and-deploy"
+                                }'
+                            """
+                        }
                     }
                 }
             }
@@ -65,8 +69,8 @@ pipeline {
                 script {
                     def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
                     sh """
-                        curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                        https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
+                        curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
                         -d '{
                             "state": "pending",
                             "target_url": "${BUILD_URL}",
@@ -78,33 +82,37 @@ pipeline {
             }
             post {
                 success {
-                    script {
-                        def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                        sh """
-                            curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                            https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
-                            -d '{
-                                "state": "success",
-                                "target_url": "${BUILD_URL}",
-                                "description": "Instalasi dependensi PHP berhasil",
-                                "context": "Jenkins/dependencies"
-                            }'
-                        """
+                    steps {
+                        script {
+                            def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                            sh """
+                                curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
+                                -d '{
+                                    "state": "success",
+                                    "target_url": "${BUILD_URL}",
+                                    "description": "Instalasi dependensi PHP berhasil",
+                                    "context": "Jenkins/dependencies"
+                                }'
+                            """
+                        }
                     }
                 }
                 failure {
-                    script {
-                        def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                        sh """
-                            curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                            https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
-                            -d '{
-                                "state": "failure",
-                                "target_url": "${BUILD_URL}",
-                                "description": "Instalasi dependensi PHP gagal",
-                                "context": "Jenkins/dependencies"
-                            }'
-                        """
+                    steps {
+                        script {
+                            def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                            sh """
+                                curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
+                                -d '{
+                                    "state": "failure",
+                                    "target_url": "${BUILD_URL}",
+                                    "description": "Instalasi dependensi PHP gagal",
+                                    "context": "Jenkins/dependencies"
+                                }'
+                            """
+                        }
                     }
                 }
             }
@@ -116,8 +124,8 @@ pipeline {
                 script {
                     def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
                     sh """
-                        curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                        https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
+                        curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
                         -d '{
                             "state": "pending",
                             "target_url": "${BUILD_URL}",
@@ -129,33 +137,37 @@ pipeline {
             }
             post {
                 success {
-                    script {
-                        def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                        sh """
-                            curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                            https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
-                            -d '{
-                                "state": "success",
-                                "target_url": "${BUILD_URL}",
-                                "description": "Build frontend berhasil",
-                                "context": "Jenkins/frontend"
-                            }'
-                        """
+                    steps {
+                        script {
+                            def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                            sh """
+                                curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
+                                -d '{
+                                    "state": "success",
+                                    "target_url": "${BUILD_URL}",
+                                    "description": "Build frontend berhasil",
+                                    "context": "Jenkins/frontend"
+                                }'
+                            """
+                        }
                     }
                 }
                 failure {
-                    script {
-                        def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                        sh """
-                            curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                            https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
-                            -d '{
-                                "state": "failure",
-                                "target_url": "${BUILD_URL}",
-                                "description": "Build frontend gagal",
-                                "context": "Jenkins/frontend"
-                            }'
-                        """
+                    steps {
+                        script {
+                            def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                            sh """
+                                curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
+                                -d '{
+                                    "state": "failure",
+                                    "target_url": "${BUILD_URL}",
+                                    "description": "Build frontend gagal",
+                                    "context": "Jenkins/frontend"
+                                }'
+                            """
+                        }
                     }
                 }
             }
@@ -168,21 +180,25 @@ pipeline {
             }
             post {
                 success {
-                    // Tidak perlu mengirim status success karena ini bagian dari build-and-deploy
+                    steps {
+                        // Tidak perlu mengirim status success karena ini bagian dari build-and-deploy
+                    }
                 }
                 failure {
-                    script {
-                        def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                        sh """
-                            curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                            https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
-                            -d '{
-                                "state": "failure",
-                                "target_url": "${BUILD_URL}",
-                                "description": "Setup environment gagal",
-                                "context": "Jenkins/build-and-deploy"
-                            }'
-                        """
+                    steps {
+                        script {
+                            def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                            sh """
+                                curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
+                                -d '{
+                                    "state": "failure",
+                                    "target_url": "${BUILD_URL}",
+                                    "description": "Setup environment gagal",
+                                    "context": "Jenkins/build-and-deploy"
+                                }'
+                            """
+                        }
                     }
                 }
             }
@@ -193,8 +209,8 @@ pipeline {
                 script {
                     def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
                     sh """
-                        curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                        https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
+                        curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
                         -d '{
                             "state": "pending",
                             "target_url": "${BUILD_URL}",
@@ -206,33 +222,37 @@ pipeline {
             }
             post {
                 success {
-                    script {
-                        def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                        sh """
-                            curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                            https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
-                            -d '{
-                                "state": "success",
-                                "target_url": "${BUILD_URL}",
-                                "description": "Koneksi database berhasil diverifikasi",
-                                "context": "Jenkins/database"
-                            }'
-                        """
+                    steps {
+                        script {
+                            def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                            sh """
+                                curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
+                                -d '{
+                                    "state": "success",
+                                    "target_url": "${BUILD_URL}",
+                                    "description": "Koneksi database berhasil diverifikasi",
+                                    "context": "Jenkins/database"
+                                }'
+                            """
+                        }
                     }
                 }
                 failure {
-                    script {
-                        def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                        sh """
-                            curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                            https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
-                            -d '{
-                                "state": "failure",
-                                "target_url": "${BUILD_URL}",
-                                "description": "Verifikasi koneksi database gagal",
-                                "context": "Jenkins/database"
-                            }'
-                        """
+                    steps {
+                        script {
+                            def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                            sh """
+                                curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
+                                -d '{
+                                    "state": "failure",
+                                    "target_url": "${BUILD_URL}",
+                                    "description": "Verifikasi koneksi database gagal",
+                                    "context": "Jenkins/database"
+                                }'
+                            """
+                        }
                     }
                 }
             }
@@ -245,21 +265,25 @@ pipeline {
             }
             post {
                 success {
-                    // Tidak perlu mengirim status success secara terpisah, bagian dari build-and-deploy
+                    steps {
+                        // Tidak perlu mengirim status success secara terpisah, bagian dari build-and-deploy
+                    }
                 }
                 failure {
-                    script {
-                        def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                        sh """
-                            curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                            https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
-                            -d '{
-                                "state": "failure",
-                                "target_url": "${BUILD_URL}",
-                                "description": "Pengujian server gagal",
-                                "context": "Jenkins/build-and-deploy"
-                            }'
-                        """
+                    steps {
+                        script {
+                            def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                            sh """
+                                curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
+                                -d '{
+                                    "state": "failure",
+                                    "target_url": "${BUILD_URL}",
+                                    "description": "Pengujian server gagal",
+                                    "context": "Jenkins/build-and-deploy"
+                                }'
+                            """
+                        }
                     }
                 }
             }
@@ -269,8 +293,8 @@ pipeline {
                 script {
                     def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
                     sh """
-                        curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                        https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
+                        curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
                         -d '{
                             "state": "pending",
                             "target_url": "${BUILD_URL}",
@@ -301,33 +325,37 @@ pipeline {
             }
             post {
                 success {
-                    script {
-                        def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                        sh """
-                            curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                            https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
-                            -d '{
-                                "state": "success",
-                                "target_url": "${BUILD_URL}",
-                                "description": "Deployment ke server ${BUILD_ENV} berhasil",
-                                "context": "Jenkins/deployment"
-                            }'
-                        """
+                    steps {
+                        script {
+                            def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                            sh """
+                                curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
+                                -d '{
+                                    "state": "success",
+                                    "target_url": "${BUILD_URL}",
+                                    "description": "Deployment ke server ${BUILD_ENV} berhasil",
+                                    "context": "Jenkins/deployment"
+                                }'
+                            """
+                        }
                     }
                 }
                 failure {
-                    script {
-                        def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                        sh """
-                            curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                            https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/statuses/${sha} \
-                            -d '{
-                                "state": "failure",
-                                "target_url": "${BUILD_URL}",
-                                "description": "Deployment ke server ${BUILD_ENV} gagal",
-                                "context": "Jenkins/deployment"
-                            }'
-                        """
+                    steps {
+                        script {
+                            def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                            sh """
+                                curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/statuses/</span>{sha} \
+                                -d '{
+                                    "state": "failure",
+                                    "target_url": "${BUILD_URL}",
+                                    "description": "Deployment ke server ${BUILD_ENV} gagal",
+                                    "context": "Jenkins/deployment"
+                                }'
+                            """
+                        }
                     }
                 }
             }
@@ -335,40 +363,39 @@ pipeline {
     }
     post {
         success {
-            script {
-                def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                def deployId = sh(
-                    script: """
-                        curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                        -H "Accept: application/vnd.github.v3+json" \
-                        https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/deployments \
+            steps {
+                script {
+                    def sha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                    def deployId = sh(
+                        script: """
+                            curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+\-H "Accept\: application/vnd\.github\.v3\+json" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/deployments \\
+\-d '\{
+"ref"\: "</span>{sha}",
+                                "environment": "${BUILD_ENV}",
+                                "description": "Deploying build ${BUILD_VERSION}",
+                                "auto_merge": false,
+                                "required_contexts": []
+                            }' | jq -r '.id'
+                        """,
+                        returnStdout: true
+                    ).trim()
+                    sh """
+                        curl -s -X POST -H "Authorization: token <span class="math-inline">\{GITHUB\_TOKEN\}" \\
+\-H "Accept\: application/vnd\.github\.v3\+json" \\
+https\://api\.github\.com/repos/</span>{GITHUB_ORG}/<span class="math-inline">\{GITHUB\_REPO\}/deployments/</span>{deployId}/statuses \
                         -d '{
-                            "ref": "${sha}",
-                            "environment": "${BUILD_ENV}",
-                            "description": "Deploying build ${BUILD_VERSION}",
-                            "auto_merge": false,
-                            "required_contexts": []
-                        }' | jq -r '.id'
-                    """,
-                    returnStdout: true
-                ).trim()
-                sh """
-                    curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-                    -H "Accept: application/vnd.github.v3+json" \
-                    https://api.github.com/repos/${GITHUB_ORG}/${GITHUB_REPO}/deployments/${deployId}/statuses \
-                    -d '{
-                        "state": "success",
-                        "log_url": "${BUILD_URL}",
-                        "description": "Deployment berhasil untuk versi ${BUILD_VERSION}",
-                        "environment": "${BUILD_ENV}",
-                        "environment_url": "https://cicd.ridwan-porto.my.id",
-                        "auto_inactive": true
-                    }'
-                """
+                            "state": "success",
+                            "log_url": "${BUILD_URL}",
+                            "description": "Deployment berhasil untuk versi <span class="math-inline">\{BUILD\_VERSION\}",
+"environment"\: "</span>{BUILD_ENV}",
+                            "environment_url": "https://cicd.ridwan-porto.my.id",
+                            "auto_inactive": true
+                        }'
+                    """
+                }
             }
-        }
-        failure {
-            echo 'Build failed!'
         }
     }
 }

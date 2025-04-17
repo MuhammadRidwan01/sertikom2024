@@ -22,6 +22,7 @@
 
     <!-- SweetAlert2 and Alpine.js -->
     @livewireStyles
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
@@ -180,7 +181,7 @@
         </div>
     </div>
 
-    @livewireScripts
+    @livewireScripts(['livewire' => true])
     @stack('scripts')
     <script src="{{ asset('vendor/livewire-alert/livewire-alert.js') }}"></script>
     <x-livewire-alert::flash />
